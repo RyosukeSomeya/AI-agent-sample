@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# ローカル運用ドキュメント（リポジトリには含めない）
+docs/plans/
+docs/tasks/
+docs/analysis/
+
+# メモ
+prompt.md
