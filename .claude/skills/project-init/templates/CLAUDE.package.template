@@ -1,0 +1,21 @@
+# {{PACKAGE_NAME}}
+
+## 概要
+
+{{PACKAGE_DESCRIPTION}}
+
+## 技術スタック
+
+{{TECH_STACK}}
+
+## コマンド
+
+{{COMMANDS}}
+
+## コードスタイル
+
+{{CODE_STYLE}}
+
+## ディレクトリ構成
+
+{{DIRECTORY_STRUCTURE}}

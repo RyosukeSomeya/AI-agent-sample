@@ -1,0 +1,31 @@
+# {{PROJECT_NAME}}
+
+## プロジェクト概要
+
+{{PROJECT_DESCRIPTION}}
+
+<!-- [monorepo-only] -->
+## リポジトリ構成
+
+{{REPO_STRUCTURE}}
+
+<!-- [/monorepo-only] -->
+## 技術スタック
+
+{{TECH_STACK}}
+
+## コマンド
+
+{{COMMANDS}}
+
+## コードスタイル
+
+{{CODE_STYLE}}
+
+## ディレクトリ構成
+
+{{DIRECTORY_STRUCTURE}}
+
+## コミュニケーション
+
+{{COMMUNICATION}}
