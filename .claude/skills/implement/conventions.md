@@ -32,6 +32,46 @@
 
 <!-- TODO: テストフレームワーク確定後に記入（pytest 等） -->
 
+## 学習用解説（実装時の必須事項）
+
+本プロジェクトは学習用サンプルのため、実装時に以下の解説を含めること。
+
+### docstring
+
+各モジュール・クラス・関数の docstring に以下を含める:
+
+```python
+"""天気データを取得するツール。
+
+学習ポイント:
+    - Strands Agents のツール定義方法（@tool デコレータ）
+    - Open-Meteo API のパラメータ設計
+    - AgentCore ワークショップ Lab 1 に対応
+
+本番構成との違い:
+    - 本番では S&P Global MCP Server を使用するが、
+      サンプルではフリーの Open-Meteo API を使用している
+"""
+```
+
+### コメント
+
+重要な設計判断や AgentCore 固有の処理には、理由を補足するコメントを入れる:
+
+```python
+# AgentCore Runtime は microVM で隔離されるため、
+# セッション間でメモリは共有されない（Lab 2 で学習）
+```
+
+### ステップ単位の README
+
+各パッケージ（collector / analyst / crosscut / alert）に README.md を作成し、以下を含める:
+
+- このエージェントの役割と学習テーマ
+- 対応する AgentCore ワークショップ Lab
+- 動作確認手順
+- 本番構成との差分
+
 ## その他
 
 <!-- TODO: プロジェクト固有の規約を追記 -->

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="draw.io">
+  <diagram name="天気データ分析AIエージェント アーキテクチャ" id="sample1">
+    <mxGraphModel dx="2200" dy="1600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- AWS Cloud -->
+        <mxCell id="aws_cloud" value="AWS Cloud" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=14;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud_alt;strokeColor=#232F3E;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;spacingTop=5;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="160" y="0" width="1520" height="1180" as="geometry"/>
+        </mxCell>
+
+        <!-- External Data Sources -->
+        <mxCell id="ext_label" value="外部データソース" style="text;html=1;fontSize=13;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#232F3E;" vertex="1" parent="1">
+          <mxGeometry x="-120" y="20" width="200" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="openmeteo" value="Open-Meteo&#xa;天気API" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.general_saml_token;whiteSpace=wrap;html=1;fillColor=#D45B07;fontColor=#232F3E;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="-60" y="80" width="60" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="disaster" value="災害情報&#xa;API" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.general_documents;whiteSpace=wrap;html=1;fillColor=#D45B07;fontColor=#232F3E;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="-60" y="180" width="60" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Layer 1: Ingestion -->
+        <mxCell id="layer1_group" value="取得・イベント層" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_region;strokeColor=#147EBA;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;spacingTop=5;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="40" width="520" height="420" as="geometry"/>
+        </mxCell>
+        <mxCell id="eb_scheduler" value="EventBridge&#xa;Scheduler" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.eventbridge" vertex="1" parent="1">
+          <mxGeometry x="220" y="100" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="lambda_ingest1" value="Lambda&#xa;データ取得&#xa;(天気 / 災害)" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#ED7100;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda" vertex="1" parent="1">
+          <mxGeometry x="370" y="130" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="lambda_scorer" value="Lambda&#xa;異常気象&#xa;スコアリング&#xa;(Bedrock API)" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#ED7100;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda" vertex="1" parent="1">
+          <mxGeometry x="370" y="290" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="eventbridge" value="Amazon&#xa;EventBridge" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.eventbridge" vertex="1" parent="1">
+          <mxGeometry x="540" y="180" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="eb_archive" value="EventBridge&#xa;Archive" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.eventbridge_archive" vertex="1" parent="1">
+          <mxGeometry x="540" y="340" width="50" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Layer 2: Orchestration -->
+        <mxCell id="layer2_group" value="オーケストレーション層" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_region;strokeColor=#147EBA;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;spacingTop=5;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="40" width="350" height="420" as="geometry"/>
+        </mxCell>
+        <mxCell id="sfn_weather" value="Step Functions&#xa;天気分析&#xa;ワークフロー" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.step_functions" vertex="1" parent="1">
+          <mxGeometry x="810" y="100" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="sfn_map" value="Map State&#xa;(都市単位で並列実行)" style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_region;strokeColor=#E7157B;fillColor=#FCE4EC;verticalAlign=top;align=left;spacingLeft=10;spacingTop=5;dashed=1;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="80" width="180" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="map_note" value="maxConcurrency=10" style="text;html=1;fontSize=9;fillColor=none;strokeColor=none;fontColor=#E7157B;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="920" y="140" width="140" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="sfn_alert" value="Step Functions&#xa;異常気象監視&#xa;ワークフロー" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.step_functions" vertex="1" parent="1">
+          <mxGeometry x="810" y="290" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="sfn_token" value="waitForTaskToken&#xa;(非同期待機)" style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_region;strokeColor=#E7157B;fillColor=#FCE4EC;verticalAlign=top;align=left;spacingLeft=10;spacingTop=5;dashed=1;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="270" width="180" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="token_note" value="待機中は&#xa;課金なし" style="text;html=1;fontSize=9;fillColor=none;strokeColor=none;fontColor=#E7157B;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="920" y="330" width="140" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Layer 3: AI Agent -->
+        <mxCell id="layer3_group" value="AIエージェント層 - Amazon Bedrock AgentCore" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_region;strokeColor=#A166FF;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;spacingTop=5;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="510" width="920" height="340" as="geometry"/>
+        </mxCell>
+        <mxCell id="ac_runtime" value="AgentCore Runtime (microVM隔離)" style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_security_group;strokeColor=#A166FF;fillColor=#F3E8FF;verticalAlign=top;align=left;spacingLeft=10;spacingTop=5;dashed=1;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="560" width="600" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="agent_collector" value="収集&#xa;エージェント" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#A166FF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sagemaker" vertex="1" parent="1">
+          <mxGeometry x="240" y="590" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="agent_analyst" value="分析&#xa;エージェント" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#A166FF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sagemaker" vertex="1" parent="1">
+          <mxGeometry x="380" y="590" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="agent_crosscut" value="横断分析&#xa;エージェント" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#A166FF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sagemaker" vertex="1" parent="1">
+          <mxGeometry x="520" y="590" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="agent_alert" value="異常検知&#xa;エージェント" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#A166FF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sagemaker" vertex="1" parent="1">
+          <mxGeometry x="670" y="590" width="50" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- A2A -->
+        <mxCell id="a2a_1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#A166FF;strokeWidth=1;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="agent_collector" target="agent_analyst" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2a_1_l" value="A2A" style="edgeLabel;html=1;fontSize=8;fontColor=#A166FF;" vertex="1" connectable="0" parent="a2a_1">
+          <mxGeometry x="-0.2" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="a2a_2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#A166FF;strokeWidth=1;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="agent_analyst" target="agent_crosscut" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2a_2_l" value="A2A" style="edgeLabel;html=1;fontSize=8;fontColor=#A166FF;" vertex="1" connectable="0" parent="a2a_2">
+          <mxGeometry x="-0.2" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- AgentCore Services -->
+        <mxCell id="ac_gateway" value="AgentCore&#xa;Gateway&#xa;(MCP)" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#A166FF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.api_gateway" vertex="1" parent="1">
+          <mxGeometry x="240" y="740" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ac_memory" value="AgentCore&#xa;Memory&#xa;(Semantic +&#xa;Episodic)" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#A166FF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.elasticache" vertex="1" parent="1">
+          <mxGeometry x="440" y="740" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ac_obs" value="AgentCore&#xa;Observability" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#A166FF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch" vertex="1" parent="1">
+          <mxGeometry x="640" y="740" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="bedrock" value="Amazon&#xa;Bedrock" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#01A88D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sagemaker" vertex="1" parent="1">
+          <mxGeometry x="850" y="590" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="guardrails" value="Bedrock&#xa;Guardrails" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#01A88D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sagemaker_model" vertex="1" parent="1">
+          <mxGeometry x="990" y="590" width="50" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Layer 4: Storage -->
+        <mxCell id="layer4_group" value="知識・ストレージ層" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_region;strokeColor=#3F8624;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;spacingTop=5;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="900" width="620" height="250" as="geometry"/>
+        </mxCell>
+        <mxCell id="kb" value="Bedrock&#xa;Knowledge&#xa;Bases" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#01A88D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sagemaker" vertex="1" parent="1">
+          <mxGeometry x="220" y="950" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3_vectors" value="S3 Vectors&#xa;(ベクトルストア)" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3" vertex="1" parent="1">
+          <mxGeometry x="220" y="1060" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3_data" value="S3&#xa;(気象データ保管)" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3" vertex="1" parent="1">
+          <mxGeometry x="370" y="960" width="50" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Layer 5: Output -->
+        <mxCell id="layer5_group" value="出力層" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_region;strokeColor=#FF6D00;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;spacingTop=5;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="900" width="390" height="250" as="geometry"/>
+        </mxCell>
+        <mxCell id="sns" value="Amazon&#xa;SNS" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns" vertex="1" parent="1">
+          <mxGeometry x="890" y="960" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ses" value="Amazon&#xa;SES" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.simple_email_service" vertex="1" parent="1">
+          <mxGeometry x="1010" y="960" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3_reports" value="S3&#xa;(レポート出力)" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3" vertex="1" parent="1">
+          <mxGeometry x="1130" y="960" width="50" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="cloudwatch" value="Amazon&#xa;CloudWatch" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=10;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch" vertex="1" parent="1">
+          <mxGeometry x="1010" y="1070" width="50" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#232F3E;strokeWidth=1.5;" edge="1" source="openmeteo" target="lambda_ingest1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#232F3E;strokeWidth=1.5;" edge="1" source="disaster" target="lambda_ingest1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E7157B;strokeWidth=1.5;" edge="1" source="eb_scheduler" target="lambda_ingest1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5c" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E7157B;strokeWidth=1.5;" edge="1" source="eb_scheduler" target="lambda_scorer" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#232F3E;strokeWidth=1.5;" edge="1" source="lambda_ingest1" target="eventbridge" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#232F3E;strokeWidth=1.5;" edge="1" source="lambda_scorer" target="eventbridge" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E7157B;strokeWidth=1;dashed=1;" edge="1" source="eventbridge" target="eb_archive" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E7157B;strokeWidth=1.5;" edge="1" source="eventbridge" target="sfn_weather" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9_l" value="気象データイベント" style="edgeLabel;html=1;fontSize=8;fontColor=#E7157B;" vertex="1" connectable="0" parent="e9">
+          <mxGeometry x="-0.2" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E7157B;strokeWidth=1.5;" edge="1" source="eventbridge" target="sfn_alert" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10_l" value="異常気象イベント" style="edgeLabel;html=1;fontSize=8;fontColor=#E7157B;" vertex="1" connectable="0" parent="e10">
+          <mxGeometry x="-0.2" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E7157B;strokeWidth=1.5;" edge="1" source="sfn_weather" target="sfn_map" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E7157B;strokeWidth=1.5;" edge="1" source="sfn_alert" target="sfn_token" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#A166FF;strokeWidth=2;" edge="1" source="sfn_map" target="ac_runtime" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="990" y="490"/>
+              <mxPoint x="510" y="490"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13_l" value="都市単位 非同期ジョブ" style="edgeLabel;html=1;fontSize=9;fontColor=#A166FF;fontStyle=1;" vertex="1" connectable="0" parent="e13">
+          <mxGeometry x="-0.3" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#A166FF;strokeWidth=2;" edge="1" source="sfn_token" target="ac_runtime" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="990" y="500"/>
+              <mxPoint x="720" y="500"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14_l" value="異常気象 分析ジョブ" style="edgeLabel;html=1;fontSize=9;fontColor=#A166FF;fontStyle=1;" vertex="1" connectable="0" parent="e14">
+          <mxGeometry x="0.3" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#01A88D;strokeWidth=1.5;" edge="1" source="ac_runtime" target="bedrock" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e15b" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#01A88D;strokeWidth=1;dashed=1;" edge="1" source="bedrock" target="guardrails" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#A166FF;strokeWidth=1;" edge="1" source="ac_runtime" target="ac_gateway" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e17" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#A166FF;strokeWidth=1;" edge="1" source="ac_runtime" target="ac_memory" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e18" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#A166FF;strokeWidth=1;" edge="1" source="ac_runtime" target="ac_obs" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e19" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#D45B07;strokeWidth=1.5;dashed=1;" edge="1" source="ac_gateway" target="openmeteo" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="100" y="765"/>
+              <mxPoint x="100" y="160"/>
+              <mxPoint x="-30" y="160"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e19_l" value="MCP" style="edgeLabel;html=1;fontSize=8;fontColor=#D45B07;fontStyle=1;" vertex="1" connectable="0" parent="e19">
+          <mxGeometry x="-0.2" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="e20" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#3F8624;strokeWidth=1.5;" edge="1" source="layer3_group" target="layer4_group" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#FF6D00;strokeWidth=1.5;" edge="1" source="layer3_group" target="layer5_group" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e22" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#3F8624;strokeWidth=1;dashed=1;" edge="1" source="kb" target="s3_vectors" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e23" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E7157B;strokeWidth=1;dashed=1;" edge="1" source="ac_obs" target="cloudwatch" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="665" y="870"/>
+              <mxPoint x="1035" y="870"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Product Labels -->
+        <mxCell id="lp1" value="プロダクト1: 天気分析（日次バッチ）" style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_on_premise;strokeColor=#5A6C86;fillColor=#E8EDF1;verticalAlign=middle;align=center;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="80" width="250" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="lp2" value="プロダクト2: 異常気象監視（イベント駆動）" style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_on_premise;strokeColor=#5A6C86;fillColor=#E8EDF1;verticalAlign=middle;align=center;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="120" width="280" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Notes -->
+        <mxCell id="n1" value="ハイブリッド マルチエージェント方式&#xa;&#xa;外側: Step Functions（決定的制御）&#xa;内側: AgentCore A2A（LLM動的判断）" style="shape=note;whiteSpace=wrap;html=1;size=14;verticalAlign=top;align=left;spacingLeft=10;spacingTop=5;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="200" width="280" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="n2" value="AgentCore 制約事項&#xa;&#xa;非同期ジョブ: 最大8時間&#xa;アクティブセッション: 1,000（調整可）&#xa;都市単位の並列化により&#xa;タイムアウトリスクを回避" style="shape=note;whiteSpace=wrap;html=1;size=14;verticalAlign=top;align=left;spacingLeft=10;spacingTop=5;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="320" width="280" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="n3" value="サンプルプロジェクト&#xa;天気データ分析AIエージェント&#xa;&#xa;本番構成(architecture.drawio)の&#xa;構造パターンを天気テーマで再現" style="shape=note;whiteSpace=wrap;html=1;size=14;verticalAlign=top;align=left;spacingLeft=10;spacingTop=5;fillColor=#E6F0FF;strokeColor=#6C8EBF;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="460" width="280" height="90" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
