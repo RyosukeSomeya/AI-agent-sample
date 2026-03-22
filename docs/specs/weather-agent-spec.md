@@ -182,8 +182,8 @@ response = client.invoke_agent(
 > AgentCore Code Interpreter を使うと、エージェントがPythonコードを動的に生成・実行できる。サンドボックス環境でpandas/NumPy/matplotlib等が利用可能。
 >
 > **実装で学ぶこと:**
-> - `from strands.tools.agentcore import code_interpreter` でCode Interpreterツールをインポート
-> - ツールとしてエージェントに渡すだけで、LLMが必要に応じてPythonコードを生成・実行する
+> - `from strands_tools.code_interpreter import AgentCoreCodeInterpreter` でCode Interpreterをインポート
+> - インスタンス化して `.code_interpreter` 属性をツールとして渡すと、LLMが必要に応じてPythonコードを生成・実行する
 > - `save_to_s3` は自作ツール。`boto3` の `s3.put_object()` をラップする
 > - `packages/agents/analyst/src/agent.py` にエージェント定義、`tools/save_to_s3.py` にS3保存ツールを配置
 

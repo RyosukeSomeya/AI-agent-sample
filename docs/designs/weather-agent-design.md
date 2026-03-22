@@ -554,13 +554,14 @@ def save_to_s3(content: str, s3_key: str, content_type: str = "application/json"
 
 ### 4.3 analyst/agent.py
 
+<!-- implement: 2026-03-22 TASK-004 code_interpreterのインポートパスを実際のパッケージ構造に合わせて修正 -->
+
 ```python
 """分析エージェント定義。
 
 学習ポイント:
-    Code Interpreter は strands.tools.agentcore からインポートする。
-    ツールとしてエージェントに渡すだけで、LLMがPythonコードを動的に生成して実行する。
-    サンドボックス環境で pandas / NumPy / matplotlib が利用可能。
+    Code Interpreter は strands_tools パッケージの AgentCoreCodeInterpreter を使う。
+    インスタンスを生成し、.code_interpreter 属性をツールとしてエージェントに渡す。
     (Lab 1: Code Interpreter 対応)
 
 本番構成との違い:
@@ -569,7 +570,7 @@ def save_to_s3(content: str, s3_key: str, content_type: str = "application/json"
 from __future__ import annotations
 
 from strands import Agent
-from strands.tools.agentcore import code_interpreter
+from strands_tools.code_interpreter import AgentCoreCodeInterpreter
 
 from analyst.tools.save_to_s3 import save_to_s3
 
@@ -585,13 +586,16 @@ SYSTEM_PROMPT = """\
 - データ分析にはpandas、NumPyを使用すること
 - グラフ生成にはmatplotlibを使用すること
 - 分析結果は必ず「要約」「詳細」「グラフ」の3部構成にすること
+- グラフの日本語表示にはjapanize-matplotlibを使用すること
 """
+
+_code_interpreter_provider = AgentCoreCodeInterpreter()
 
 
 def create_analyst_agent() -> Agent:
     return Agent(
         system_prompt=SYSTEM_PROMPT,
-        tools=[code_interpreter, save_to_s3],
+        tools=[_code_interpreter_provider.code_interpreter, save_to_s3],
     )
 ```
 
