@@ -660,6 +660,119 @@ def create_orchestrator() -> Agent:
     )
 ```
 
+<!-- implement: 2026-03-22 TASK-005 crosscut/alert 詳細設計セクション追加 -->
+
+### 5.2 crosscut/agent.py
+
+```python
+"""横断分析エージェント定義。
+
+学習ポイント:
+    マルチエージェント構成における「専門エージェント」の設計パターン。
+    analyst と同じツール構成（Code Interpreter + save_to_s3）だが、
+    システムプロンプトで「横断比較」という専門性を定義。
+    (ワークショップ外 / 発展: マルチエージェント設計)
+
+    ポイント:
+    - analyst と同じく Code Interpreter + save_to_s3 をツールに持つ
+    - システムプロンプトで「横断比較」という専門性を定義
+    - エージェントの専門性はプロンプトで決まる — コードの構造は他と同じ
+
+本番構成との違い:
+    本番では AgentCore Runtime にデプロイし、A2A プロトコルで通信する。
+    ローカルではオーケストレータが直接 Agent インスタンスをツールとして呼び出す。
+"""
+from __future__ import annotations
+
+from strands import Agent
+from strands_tools.code_interpreter import AgentCoreCodeInterpreter
+
+from analyst.tools.save_to_s3 import save_to_s3
+
+SYSTEM_PROMPT = """\
+あなたは複数都市の気象データを横断的に比較分析する専門家です。
+各都市の分析結果を受け取り、都市間の比較・相関分析・トレンド比較を行います。
+
+利用可能なツール:
+- code_interpreter: 横断分析のPythonコード実行
+- save_to_s3: 横断分析レポートの保存
+
+分析のルール:
+- 最低2都市以上のデータを比較すること
+- 都市間の差異を明確に示すこと
+- 共通トレンドと個別傾向を分離して報告すること
+"""
+
+_code_interpreter_provider = AgentCoreCodeInterpreter()
+
+
+def create_crosscut_agent() -> Agent:
+    return Agent(
+        system_prompt=SYSTEM_PROMPT,
+        tools=[_code_interpreter_provider.code_interpreter, save_to_s3],
+    )
+```
+
+### 5.3 alert/agent.py
+
+```python
+"""異常検知エージェント定義。
+
+学習ポイント:
+    閾値ベースのルールをシステムプロンプトで定義し、LLMが柔軟に判断する設計パターン。
+    (ワークショップ外 / 発展: イベント駆動エージェント設計)
+
+    ポイント:
+    - 検知ルール（閾値）はシステムプロンプトに自然言語で記述
+    - LLMがルールを解釈し、データに基づいて判断する
+    - アラート出力は JSON 形式で構造化
+    - save_to_s3 のみをツールに持つ「判断特化型」エージェント
+
+本番構成との違い:
+    本番では EventBridge イベントをトリガーに自動起動される
+    「シグナル検知エージェント」に相当する。
+"""
+from __future__ import annotations
+
+from strands import Agent
+
+from analyst.tools.save_to_s3 import save_to_s3
+
+SYSTEM_PROMPT = """\
+あなたは気象異常を検知する監視エージェントです。
+気象データを監視し、急激な変化や危険な状況を検知してアラートを生成します。
+
+検知ルール:
+- 24時間以内の気温変化が10°C以上 → 急激な気温変化アラート
+- 風速が15m/s以上 → 強風アラート
+- 降水量が50mm/h以上 → 大雨アラート
+- 災害警報が発表中 → 災害アラート
+
+アラートは重要度（critical / warning / info）を付与すること。
+
+アラート出力は以下のJSON形式で生成すること:
+{
+  "alert_id": "alert-YYYYMMDD-NNN",
+  "timestamp": "ISO 8601形式",
+  "city": "都市名",
+  "type": "temperature_change | strong_wind | heavy_rain | disaster",
+  "severity": "critical | warning | info",
+  "message": "人が読めるアラートメッセージ",
+  "data": { ... }
+}
+
+利用可能なツール:
+- save_to_s3: アラートJSONをS3に保存（キー: alerts/{date}/{alert-id}.json）
+"""
+
+
+def create_alert_agent() -> Agent:
+    return Agent(
+        system_prompt=SYSTEM_PROMPT,
+        tools=[save_to_s3],
+    )
+```
+
 ---
 
 ## 6. Step 4〜6: AgentCore機能 詳細設計
