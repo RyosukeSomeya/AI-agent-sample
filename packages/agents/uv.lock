@@ -8,6 +8,7 @@ members = [
     "analyst",
     "collector",
     "crosscut",
+    "orchestrator",
     "shared",
     "weather-agent",
 ]
@@ -952,6 +953,27 @@ wheels = [
 ]
 
 [[package]]
+name = "orchestrator"
+version = "0.1.0"
+source = { editable = "orchestrator" }
+dependencies = [
+    { name = "alert" },
+    { name = "analyst" },
+    { name = "collector" },
+    { name = "crosscut" },
+    { name = "strands-agents" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "alert", editable = "alert" },
+    { name = "analyst", editable = "analyst" },
+    { name = "collector", editable = "collector" },
+    { name = "crosscut", editable = "crosscut" },
+    { name = "strands-agents", specifier = ">=0.1" },
+]
+
+[[package]]
 name = "packaging"
 version = "26.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1732,6 +1754,7 @@ dependencies = [
     { name = "analyst" },
     { name = "collector" },
     { name = "crosscut" },
+    { name = "orchestrator" },
     { name = "shared" },
 ]
 
@@ -1741,6 +1764,7 @@ requires-dist = [
     { name = "analyst", editable = "analyst" },
     { name = "collector", editable = "collector" },
     { name = "crosscut", editable = "crosscut" },
+    { name = "orchestrator", editable = "orchestrator" },
     { name = "shared", editable = "shared" },
 ]
 

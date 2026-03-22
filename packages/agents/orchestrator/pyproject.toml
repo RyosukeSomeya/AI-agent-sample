@@ -1,0 +1,19 @@
+[project]
+name = "orchestrator"
+version = "0.1.0"
+description = "天気データ分析AIエージェント - オーケストレータ（Step 3）"
+requires-python = ">=3.12"
+dependencies = [
+    "strands-agents>=0.1",
+    "collector",
+    "analyst",
+    "crosscut",
+    "alert",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/orchestrator"]

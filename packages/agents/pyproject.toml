@@ -9,6 +9,7 @@ dependencies = [
     "analyst",
     "crosscut",
     "alert",
+    "orchestrator",
 ]
 
 [tool.uv.workspace]
@@ -19,7 +20,7 @@ members = [
     "analyst",     # Step 2 (TASK-004)
     "crosscut",    # Step 3 (TASK-005)
     "alert",       # Step 3 (TASK-005)
-    # "orchestrator",# Step 3 (TASK-006)
+    "orchestrator",# Step 3 (TASK-006)
     # "lambdas",     # Step 7 (TASK-011)
 ]
 
@@ -29,3 +30,4 @@ collector = { workspace = true }
 analyst = { workspace = true }
 crosscut = { workspace = true }
 alert = { workspace = true }
+orchestrator = { workspace = true }
