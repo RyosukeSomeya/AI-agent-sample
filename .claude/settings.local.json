@@ -3,7 +3,9 @@
     "allow": [
       "WebSearch",
       "WebFetch(domain:github.com)",
-      "mcp__drawio__create_diagram"
+      "mcp__drawio__create_diagram",
+      "Bash(uv sync:*)",
+      "Bash(echo \"PATH=$PATH\")"
     ]
   },
   "enableAllProjectMcpServers": true,
