@@ -10,6 +10,7 @@ dependencies = [
     "crosscut",
     "alert",
     "orchestrator",
+    "bedrock-agentcore>=1.4.7",
 ]
 
 [tool.uv.workspace]

@@ -413,6 +413,7 @@ name = "collector"
 version = "0.1.0"
 source = { editable = "collector" }
 dependencies = [
+    { name = "bedrock-agentcore" },
     { name = "httpx" },
     { name = "shared" },
     { name = "strands-agents" },
@@ -420,6 +421,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "bedrock-agentcore", specifier = ">=1.4.7" },
     { name = "httpx", specifier = ">=0.27" },
     { name = "shared", editable = "shared" },
     { name = "strands-agents", specifier = ">=0.1" },
@@ -1752,6 +1754,7 @@ source = { virtual = "." }
 dependencies = [
     { name = "alert" },
     { name = "analyst" },
+    { name = "bedrock-agentcore" },
     { name = "collector" },
     { name = "crosscut" },
     { name = "orchestrator" },
@@ -1762,6 +1765,7 @@ dependencies = [
 requires-dist = [
     { name = "alert", editable = "alert" },
     { name = "analyst", editable = "analyst" },
+    { name = "bedrock-agentcore", specifier = ">=1.4.7" },
     { name = "collector", editable = "collector" },
     { name = "crosscut", editable = "crosscut" },
     { name = "orchestrator", editable = "orchestrator" },

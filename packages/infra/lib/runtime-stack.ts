@@ -1,6 +1,7 @@
 import * as cdk from "aws-cdk-lib";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as logs from "aws-cdk-lib/aws-logs";
 import { Construct } from "constructs";
 
 /**
@@ -42,9 +43,11 @@ export class RuntimeStack extends cdk.Stack {
     // エージェントが S3 や Bedrock にアクセスするための権限をこのロールで付与する。
     this.runtimeRole = new iam.Role(this, "AgentCoreRuntimeRole", {
       roleName: "weather-agent-runtime-role",
-      assumedBy: new iam.ServicePrincipal("bedrock.amazonaws.com"),
+      // AgentCore Runtime のサービスプリンシパルは bedrock-agentcore.amazonaws.com
+      // bedrock.amazonaws.com ではないので注意（Lab 2 で学ぶハマりポイント）
+      assumedBy: new iam.ServicePrincipal("bedrock-agentcore.amazonaws.com"),
       description:
-        "AgentCore Runtime がエージェントコード実行時に使用するロール",
+        "IAM role for AgentCore Runtime to execute weather agent code",
     });
 
     // S3 アクセス権限: データバケットへの読み書き
@@ -77,6 +80,28 @@ export class RuntimeStack extends cdk.Stack {
         resources: ["*"],
       })
     );
+
+    // ECR 権限: コンテナデプロイ時にイメージを取得するために必要
+    // 学習ポイント: コンテナデプロイでは Runtime が ECR からイメージを pull する
+    this.runtimeRole.addToPolicy(
+      new iam.PolicyStatement({
+        sid: "ECRAccess",
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchGetImage",
+          "ecr:GetDownloadUrlForLayer",
+        ],
+        resources: ["*"],
+      })
+    );
+
+    // ログ配信設定:
+    // AllowVendedLogDeliveryForResource は IAM ポリシーではなく
+    // AgentCore Runtime リソース自体のリソースベースポリシーであり、
+    // CloudFormation では設定できない（V2 Vended Logs の制約）。
+    // deploy.sh 内の setup_observability.py（boto3）で設定する。
+    // 参考: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AWS-logs-infrastructure-V2-service-specific.html
 
     // CloudFormation 出力
     new cdk.CfnOutput(this, "RuntimeRoleArn", {
