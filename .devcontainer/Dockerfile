@@ -86,6 +86,10 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
 RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION} yarn
 
 
+# Install uv (Python package manager)
+# COPY --from でビルド時にバイナリを取得するため、ファイアウォール有効時も影響なし
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
 # Copy and set up firewall script
 COPY init-firewall.sh /usr/local/bin/
 USER root
