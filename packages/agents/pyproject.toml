@@ -5,13 +5,14 @@ description = "天気データ分析AIエージェント（学習用サンプル
 requires-python = ">=3.12"
 dependencies = [
     "shared",
+    "collector",
 ]
 
 [tool.uv.workspace]
 members = [
     "shared",
     # 以下は各Stepで段階的に追加する
-    # "collector",   # Step 1 (TASK-002)
+    "collector",   # Step 1 (TASK-002)
     # "analyst",     # Step 2 (TASK-004)
     # "crosscut",    # Step 3 (TASK-005)
     # "alert",       # Step 3 (TASK-005)
@@ -21,3 +22,4 @@ members = [
 
 [tool.uv.sources]
 shared = { workspace = true }
+collector = { workspace = true }

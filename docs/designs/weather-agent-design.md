@@ -323,12 +323,10 @@ def get_weather(city: str, days: int = 7, data_type: str = "forecast") -> str:
         "forecast_days": min(days, 16),
     }
 
-    try:
-        with httpx.Client(timeout=5.0) as client:
-            response = client.get(OPEN_METEO_BASE, params=params)
-            response.raise_for_status()
-    except httpx.HTTPError as e:
-        return f"エラー: 天気データの取得に失敗しました（{e}）"
+    # 仕様書: API通信エラー → リトライ1回、失敗時はエラーメッセージを返す
+    response = _fetch_with_retry(OPEN_METEO_BASE, params)
+    if response is None:
+        return "エラー: 天気データの取得に失敗しました。しばらく待ってから再試行してください。"
 
     data = response.json()
     daily = data.get("daily", {})
@@ -374,7 +372,29 @@ def _geocode(city: str) -> tuple[float, float] | None:
     except httpx.HTTPError:
         pass
     return None
+
+
+def _fetch_with_retry(
+    url: str, params: dict, max_retries: int = 1
+) -> httpx.Response | None:
+    """HTTP GETリクエストをリトライ付きで実行する。
+
+    仕様書の要件:
+        5秒タイムアウト、1回リトライ。失敗時は None を返す。
+    """
+    for attempt in range(1 + max_retries):
+        try:
+            with httpx.Client(timeout=5.0) as client:
+                response = client.get(url, params=params)
+                response.raise_for_status()
+                return response
+        except httpx.HTTPError:
+            if attempt == max_retries:
+                return None
+    return None
 ```
+
+<!-- implement: 2026-03-22 TASK-002 リトライ付きHTTPヘルパー(_fetch_with_retry)を追加、エラーハンドリングを仕様書準拠に更新 -->
 
 ### 3.4 collector/agent.py
 
