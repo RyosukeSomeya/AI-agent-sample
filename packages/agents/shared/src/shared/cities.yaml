@@ -1,0 +1,16 @@
+cities:
+  - name: 東京
+    name_en: Tokyo
+    latitude: 35.6762
+    longitude: 139.6503
+    timezone: Asia/Tokyo
+  - name: 大阪
+    name_en: Osaka
+    latitude: 34.6937
+    longitude: 135.5023
+    timezone: Asia/Tokyo
+  - name: 福岡
+    name_en: Fukuoka
+    latitude: 33.5904
+    longitude: 130.4017
+    timezone: Asia/Tokyo

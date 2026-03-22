@@ -1,0 +1,23 @@
+[project]
+name = "weather-agent"
+version = "0.1.0"
+description = "天気データ分析AIエージェント（学習用サンプル）"
+requires-python = ">=3.12"
+dependencies = [
+    "shared",
+]
+
+[tool.uv.workspace]
+members = [
+    "shared",
+    # 以下は各Stepで段階的に追加する
+    # "collector",   # Step 1 (TASK-002)
+    # "analyst",     # Step 2 (TASK-004)
+    # "crosscut",    # Step 3 (TASK-005)
+    # "alert",       # Step 3 (TASK-005)
+    # "orchestrator",# Step 3 (TASK-006)
+    # "lambdas",     # Step 7 (TASK-011)
+]
+
+[tool.uv.sources]
+shared = { workspace = true }
