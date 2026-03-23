@@ -244,10 +244,10 @@ TASK-008（今回）                 次のタスクたち
 
 今回作った `invoke_agent()` の呼び出しパターンは、TASK-013 の Step Functions でも同じ形で使われます。手動テストで動作確認した呼び出し方を、そのまま自動化するイメージです。
 
-agentcore configure -n collector_container -r ap-northeast-1 -ni
+agentcore configure -e src/orchestrator/runtime.py -n orchestrator -er arn:aws:iam::187363817007:role/weather-agent-runtime-role -r us-east-1 -dm -ni
+agentcore deploy
+agentcore invoke -a orchestrator '{"prompt": "hello"}'
 
-uv run python -c "import boto3, json; client = boto3.client('bedrock-agentcore', region_name='ap-northeast-1'); resp = client.invoke_agent_runtime agentRuntimeArn='arn:aws:bedrock-agentcore:ap-northeast-1:187363817007:runtime/collector_containe r-eHsW8ADWd6',runtimeSessionId='test-session-00000000000000000000001', payload=json.dumps({'input': {'prompt': 'hello'}}), qualifier='DEFAULT'); print(json.loads(resp['response'].read()))"
+agentcore configure -e src/orchestrator/runtime.py -n orchestrator_us -er arn:aws:iam::187363817007:role/weather-agent-runtime-role -r us-east-1 -dm -ni
 
-aws logs describe-log-groups --log-group-name-prefix "/aws/bedrock-agentcore/runtimes/collector_container" --region ap-northeast-1
-
-aws logs tail /aws/bedrock-agentcore/runtimes/collector_container-eHsW8ADWd6-DEFAULT --since 10m --region ap-northeast-1
+aws logs tail /aws/vendedlogs/bedrock-agentcore/runtime/orchestrator_us-KPsWTs8N1Z --since 10m --region us-east-1
