@@ -16,6 +16,7 @@ import * as cdk from "aws-cdk-lib";
 import { StorageStack } from "../lib/storage-stack";
 import { RuntimeStack } from "../lib/runtime-stack";
 import { MemoryStack } from "../lib/memory-stack";
+import { ObservabilityStack } from "../lib/observability-stack";
 
 const app = new cdk.App();
 
@@ -42,3 +43,13 @@ const memoryStack = new MemoryStack(app, "MemoryStack", {
   runtimeRole: runtimeStack.runtimeRole,
 });
 memoryStack.addDependency(runtimeStack);
+
+// Step 6: Observability（CloudWatch ダッシュボード・アラーム）
+// RuntimeStack のロールに CloudWatch 権限を追加し、ダッシュボード・アラームを構築する
+// 学習ポイント: AgentCore は OTel トレースを自動生成するため、
+// CloudWatch でEnd-to-End の監視が可能になる（Lab 4 対応）
+const observabilityStack = new ObservabilityStack(app, "ObservabilityStack", {
+  description: "天気データ分析エージェント - CloudWatch Observability",
+  runtimeRole: runtimeStack.runtimeRole,
+});
+observabilityStack.addDependency(runtimeStack);
