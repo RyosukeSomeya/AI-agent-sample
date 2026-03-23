@@ -19,6 +19,7 @@ import { MemoryStack } from "../lib/memory-stack";
 import { ObservabilityStack } from "../lib/observability-stack";
 import { EventStack } from "../lib/event-stack";
 import { OrchestrationStack } from "../lib/orchestration-stack";
+import { GatewayStack } from "../lib/gateway-stack";
 
 const app = new cdk.App();
 
@@ -77,3 +78,16 @@ const orchestrationStack = new OrchestrationStack(app, "OrchestrationStack", {
 });
 orchestrationStack.addDependency(eventStack);
 orchestrationStack.addDependency(runtimeStack);
+
+// Step 9: Gateway + Guardrails + 通知（本番構成の仕上げ）
+// AgentCore Gateway (MCP)、Bedrock Guardrails、Knowledge Bases、SNS/SES
+// 学習ポイント: MCP で外部 API を統一し、Guardrails で安全性を確保し、
+// Knowledge Bases で RAG を実現し、SNS/SES で通知する（Lab 6, 7, 8 対応）
+const gatewayStack = new GatewayStack(app, "GatewayStack", {
+  description: "天気データ分析エージェント - Gateway + Guardrails + 通知",
+  dataBucket: storageStack.dataBucket,
+  runtimeRole: runtimeStack.runtimeRole,
+  // notificationEmail: "your-email@example.com",  // デプロイ時にコメントを外す
+});
+gatewayStack.addDependency(runtimeStack);
+gatewayStack.addDependency(orchestrationStack);
