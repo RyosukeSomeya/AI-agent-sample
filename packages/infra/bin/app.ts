@@ -17,6 +17,7 @@ import { StorageStack } from "../lib/storage-stack";
 import { RuntimeStack } from "../lib/runtime-stack";
 import { MemoryStack } from "../lib/memory-stack";
 import { ObservabilityStack } from "../lib/observability-stack";
+import { EventStack } from "../lib/event-stack";
 
 const app = new cdk.App();
 
@@ -53,3 +54,12 @@ const observabilityStack = new ObservabilityStack(app, "ObservabilityStack", {
   runtimeRole: runtimeStack.runtimeRole,
 });
 observabilityStack.addDependency(runtimeStack);
+
+// Step 7: EventBridge + Lambda（イベント駆動基盤）
+// Scheduler → Lambda(ingest/scorer) → EventBridge → (Step Functions は TASK-013)
+// 学習ポイント: イベント駆動パイプラインで「対話型」と「バッチ型」を統合する（Step 7 対応）
+const eventStack = new EventStack(app, "EventStack", {
+  description: "天気データ分析エージェント - EventBridge + Lambda",
+  dataBucket: storageStack.dataBucket,
+});
+eventStack.addDependency(storageStack);
