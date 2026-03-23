@@ -1,0 +1,21 @@
+[project]
+name = "lambdas"
+version = "0.1.0"
+description = "Lambda関数群（データ取得 + 異常気象スコアリング）"
+requires-python = ">=3.12"
+dependencies = [
+    "shared",
+    "collector",
+    "boto3>=1.34",
+]
+
+[tool.uv.sources]
+shared = { workspace = true }
+collector = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lambdas"]

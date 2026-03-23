@@ -10,6 +10,7 @@ dependencies = [
     "crosscut",
     "alert",
     "orchestrator",
+    "lambdas",
     "bedrock-agentcore>=1.4.7",
 ]
 
@@ -22,7 +23,7 @@ members = [
     "crosscut",    # Step 3 (TASK-005)
     "alert",       # Step 3 (TASK-005)
     "orchestrator",# Step 3 (TASK-006)
-    # "lambdas",     # Step 7 (TASK-011)
+    "lambdas",     # Step 7 (TASK-011)
 ]
 
 [tool.uv.sources]
@@ -32,3 +33,4 @@ analyst = { workspace = true }
 crosscut = { workspace = true }
 alert = { workspace = true }
 orchestrator = { workspace = true }
+lambdas = { workspace = true }

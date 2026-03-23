@@ -474,6 +474,9 @@ cities:
 
 #### 異常気象検知イベント
 
+<!-- implement: 2026-03-22 TASK-011 スコア閾値を明記 -->
+scorer Lambda が算出した `anomaly_score` が **0.7 を超えた場合** に発行される。
+
 ```json
 {
   "source": "weather-agent.scorer",
