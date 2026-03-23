@@ -19,31 +19,38 @@ financial-agent/
 │   │   │   ├── __init__.py
 │   │   │   ├── agent.py                 # Strands Agent 定義・システムプロンプト
 │   │   │   ├── tools.py                 # エージェント固有ツール
+│   │   │   ├── Dockerfile               # AgentCore カスタムコンテナ
 │   │   │   └── prompts/
 │   │   │       └── system.md
 │   │   ├── analyst/                     # 分析エージェント
 │   │   │   ├── __init__.py
 │   │   │   ├── agent.py
 │   │   │   ├── tools.py
+│   │   │   ├── Dockerfile
 │   │   │   └── prompts/
 │   │   │       └── system.md
 │   │   ├── crosscut/                    # 横断分析エージェント
 │   │   │   ├── __init__.py
 │   │   │   ├── agent.py
 │   │   │   ├── tools.py
+│   │   │   ├── Dockerfile
 │   │   │   └── prompts/
 │   │   │       └── system.md
 │   │   ├── signal/                      # シグナル検知エージェント
 │   │   │   ├── __init__.py
 │   │   │   ├── agent.py
 │   │   │   ├── tools.py
+│   │   │   ├── Dockerfile
 │   │   │   └── prompts/
 │   │   │       └── system.md
-│   │   └── shared/                      # 共通ライブラリ
-│   │       ├── __init__.py
-│   │       ├── models.py                # 共通データモデル（イベント型、レポート型等）
-│   │       ├── clients.py               # 外部APIクライアント（EDGAR, TDnet等）
-│   │       └── config.py                # 環境変数・設定管理
+│   │   ├── shared/                      # 共通ライブラリ
+│   │   │   ├── __init__.py
+│   │   │   ├── models.py                # 共通データモデル（イベント型、レポート型等）
+│   │   │   ├── clients.py               # 外部APIクライアント（EDGAR, TDnet等）
+│   │   │   └── config.py                # 環境変数・設定管理
+│   │   └── scripts/                     # デプロイ補助スクリプト
+│   │       ├── deploy_runtime.py        # AgentCore Runtime 作成/更新（boto3）
+│   │       └── setup_observability.py   # ログ配信設定（初回のみ）
 │   │
 │   ├── lambdas/                         # Lambda 関数群（Python）
 │   │   ├── pyproject.toml
