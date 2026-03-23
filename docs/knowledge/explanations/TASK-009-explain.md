@@ -242,24 +242,29 @@ agent = create_analyst_agent(memory_id=memory_id, session_id=session_id, actor_i
 ```
 packages/infra/（CDK — TypeScript）         packages/agents/（エージェント — Python）
 ┌──────────────────────┐
-│ bin/app.ts           │
-│ (エントリポイント)    │                  ┌─────────────────────────┐
-│                      │                  │ shared/memory.py        │
-│ StorageStack ──→ S3  │                  │ (Memory Strategy 定義)  │
-│   ↓                  │                  │ (共通設定)              │
-│ RuntimeStack ──→ IAM │                  └────────┬────────────────┘
-│   ↓                  │                           │  インポート
-│ MemoryStack ──→ 権限 │                    ┌──────┼───────┐
-│                      │                    ↓      ↓       ↓
-└──────────────────────┘          analyst/    crosscut/   orchestrator/
-                                  agent.py    agent.py    agent.py
-                                  (Memory有)  (Memory有)  (バトンリレー)
-                                    ↕ 同じ memory_id を共有 ↕
+│ bin/app.ts           │                  ┌─────────────────────────┐
+│ (エントリポイント)    │                  │ shared/memory.py        │
+│                      │                  │ (Memory Strategy 定義)  │
+│ StorageStack ──→ S3  │                  │ (共通設定)              │
+│   ↓                  │                  └────────┬────────────────┘
+│ RuntimeStack ──→ IAM │                           │  インポート
+│   ↓                  │                    ┌──────┴───────┐
+│ MemoryStack ──→ 権限 │                    ↓              ↓
+│                      │             analyst/agent.py  crosscut/agent.py
+└──────────────────────┘             (Memory有)        (Memory有)
+                                       ↕ 同じ memory_id を共有 ↕
+                                          ↑              ↑
+                                          │   バトンリレー │
+                                    ┌─────┴──────────────┴─────┐
+                                    │ orchestrator/agent.py     │
+                                    │ memory_id を受け取り      │
+                                    │ analyst / crosscut に渡す │
+                                    └──────────────────────────┘
 
 __main__.py が起動時に:
   1. create_memory() で Memory リソースを作成 → memory_id 取得
   2. session_id / actor_id を生成
-  3. create_xxx_agent(memory_id, session_id, actor_id) でエージェント生成
+  3. orchestrator に渡す → orchestrator が analyst / crosscut に配る
 ```
 
 ---
