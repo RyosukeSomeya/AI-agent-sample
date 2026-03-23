@@ -9,6 +9,11 @@
     これが本番構成の「ハイブリッドマルチエージェント」の
     内側（AgentCore A2A / LLM動的判断）に相当する。
 
+    Memory 連携（Lab 3 対応）:
+    analyst / crosscut に Memory を渡すため、オーケストレータ起動時に
+    memory_id / session_id / actor_id を受け取り、子エージェントに引き渡す。
+    オーケストレータ自体は Memory を使わない（子エージェントが記憶を管理する）。
+
     ポイント:
     - 各専門エージェント（Agent インスタンス）を tools リストに渡す
     - Strands Agents は Agent を自動的にツールとして扱う
@@ -51,7 +56,11 @@ SYSTEM_PROMPT = """\
 """
 
 
-def create_orchestrator() -> Agent:
+def create_orchestrator(
+    memory_id: str,
+    session_id: str,
+    actor_id: str,
+) -> Agent:
     """オーケストレータを生成する。
 
     学習ポイント:
@@ -63,12 +72,31 @@ def create_orchestrator() -> Agent:
         これが A2A（Agent-to-Agent）連携の実装パターン。
         「エージェントをツールとして渡す」だけで実現できるシンプルさが
         Strands Agents の設計の特徴。
+
+        Memory 連携（Lab 3 対応）:
+        analyst / crosscut には memory_id を渡して Memory を有効化する。
+        collector / alert は記憶を使わないため、引数なしで生成する。
+
+    Args:
+        memory_id: AgentCore Memory の ID（analyst / crosscut に渡す）。
+        session_id: セッション ID（会話ごとに一意）。
+        actor_id: ユーザー ID（ユーザーごとに一意）。
     """
     # 各エージェントをツールとしてオーケストレータに渡す
     # Agent インスタンスがそのままツールになる — Strands Agents の A2A パターン
     collector = create_collector_agent()
-    analyst = create_analyst_agent()
-    crosscut = create_crosscut_agent()
+    # analyst / crosscut には Memory を渡す（Lab 3 対応）
+    # 同じ memory_id を共有するため、分析結果を横断参照できる
+    analyst = create_analyst_agent(
+        memory_id=memory_id,
+        session_id=session_id,
+        actor_id=actor_id,
+    )
+    crosscut = create_crosscut_agent(
+        memory_id=memory_id,
+        session_id=session_id,
+        actor_id=actor_id,
+    )
     alert_agent = create_alert_agent()
 
     return Agent(

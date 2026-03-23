@@ -9,6 +9,7 @@ dependencies = [
     "analyst",
     "crosscut",
     "alert",
+    "shared",
 ]
 
 [build-system]

@@ -801,22 +801,90 @@ export class RuntimeStack extends cdk.Stack {
 ### 6.2 MemoryStack（Step 5）
 
 > **学習ポイント（Lab 3 対応）:**
-> AgentCore Memory は短期記憶（会話内）と長期記憶（セマンティック検索可能）を提供する。
-> `MemoryClient` の `create_event()` / `retrieve_memories()` で読み書きする。
+> AgentCore Memory は短期記憶（STM: 会話内）と長期記憶（LTM: セマンティック検索可能）を提供する。
+> `bedrock_agentcore.memory` パッケージの `MemoryClient` で Memory リソースを作成し、
+> `AgentCoreMemorySessionManager` を Agent の `session_manager` に渡して利用する。
 
-エージェント側の変更:
+<!-- implement: 2026-03-22 TASK-009 SDK実態に合わせて bedrock_agentcore.memory API に修正、Memory Strategy 定義を追加 -->
+
+#### 6.2.1 Memory Strategy 定義
+
+> **学習ポイント:**
+> Memory Strategy は短期記憶を長期記憶に自動変換するルール。3種類ある:
+> - `semanticMemoryStrategy`: 事実情報を抽出・保存（天気分析結果の記憶に使用）
+> - `summaryMemoryStrategy`: セッションを自動要約（会話の要約に使用）
+> - `userPreferenceMemoryStrategy`: ユーザーの好みを学習（分析スタイルの好みに使用）
+
+```python
+# shared/memory.py — Memory リソースの作成と設定を共通化
+# 学習ポイント: Memory Strategy を定義して create_memory_and_wait() で Memory を作成する。
+# Strategy ごとに namespace が分かれ、短期記憶が自動的に長期記憶に変換される。
+from bedrock_agentcore.memory import MemoryClient
+from bedrock_agentcore.memory.integrations.strands.config import (
+    AgentCoreMemoryConfig,
+    RetrievalConfig,
+)
+from bedrock_agentcore.memory.integrations.strands.session_manager import (
+    AgentCoreMemorySessionManager,
+)
+
+# Memory Strategy 定義（Lab 3 対応）
+# 3つの Strategy で短期→長期への自動変換ルールを定義する
+MEMORY_STRATEGIES = [
+    {
+        # 事実抽出: 天気データ分析の結果（気温・降水量の傾向等）を長期記憶に保存
+        "semanticMemoryStrategy": {
+            "name": "WeatherFactExtractor",
+            "namespaces": ["/facts/{actorId}/"],
+        }
+    },
+    {
+        # セッション要約: 各分析セッションの要約を自動生成して保存
+        "summaryMemoryStrategy": {
+            "name": "AnalysisSessionSummarizer",
+            "namespaces": ["/summaries/{actorId}/{sessionId}/"],
+        }
+    },
+    {
+        # ユーザー好み学習: 分析スタイルの好み（グラフ種類、比較軸等）を学習
+        "userPreferenceMemoryStrategy": {
+            "name": "AnalysisPreferenceLearner",
+            "namespaces": ["/preferences/{actorId}/"],
+        }
+    },
+]
+
+# 検索設定: 各 namespace からの検索パラメータ
+RETRIEVAL_CONFIG = {
+    "/facts/{actorId}/": RetrievalConfig(
+        top_k=10,            # 事実情報は多めに取得
+        relevance_score=0.3,  # 閾値は低めで幅広くヒットさせる
+    ),
+    "/summaries/{actorId}/{sessionId}/": RetrievalConfig(
+        top_k=5,
+        relevance_score=0.5,
+    ),
+    "/preferences/{actorId}/": RetrievalConfig(
+        top_k=5,
+        relevance_score=0.7,  # 好みは関連度の高いものだけ取得
+    ),
+}
+```
+
+#### 6.2.2 エージェント側の変更
 
 ```python
 # analyst/agent.py に Memory 連携を追加
-# 学習ポイント: memory パラメータを Agent に渡すだけで記憶機能が有効になる
-from agentcore.memory import MemoryClient
+# 学習ポイント: AgentCoreMemorySessionManager を Agent の session_manager に渡すことで
+# STM（会話の保存）と LTM（Strategy による自動変換・検索）の両方が有効になる
+from shared.memory import create_session_manager
 
-memory_client = MemoryClient(namespace="/weather-analysis")
+session_manager = create_session_manager(session_id="...", actor_id="...")
 
 agent = Agent(
     system_prompt=SYSTEM_PROMPT,
     tools=[code_interpreter, save_to_s3],
-    memory=memory_client,  # これだけで記憶機能が有効になる
+    session_manager=session_manager,  # STM + LTM が有効になる
 )
 ```
 

@@ -15,6 +15,7 @@ import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
 import { StorageStack } from "../lib/storage-stack";
 import { RuntimeStack } from "../lib/runtime-stack";
+import { MemoryStack } from "../lib/memory-stack";
 
 const app = new cdk.App();
 
@@ -31,3 +32,13 @@ const runtimeStack = new RuntimeStack(app, "RuntimeStack", {
   dataBucket: storageStack.dataBucket,
 });
 runtimeStack.addDependency(storageStack);
+
+// Step 5: AgentCore Memory（記憶機能）
+// RuntimeStack のロールに Memory API アクセス権限を追加する
+// 学習ポイント: Memory はリソースを別途作成するのではなく、
+// IAM 権限を付与してエージェントコード側で MemoryClient を使うだけで利用開始できる（Lab 3 対応）
+const memoryStack = new MemoryStack(app, "MemoryStack", {
+  description: "天気データ分析エージェント - AgentCore Memory",
+  runtimeRole: runtimeStack.runtimeRole,
+});
+memoryStack.addDependency(runtimeStack);

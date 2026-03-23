@@ -963,6 +963,7 @@ dependencies = [
     { name = "analyst" },
     { name = "collector" },
     { name = "crosscut" },
+    { name = "shared" },
     { name = "strands-agents" },
 ]
 
@@ -972,6 +973,7 @@ requires-dist = [
     { name = "analyst", editable = "analyst" },
     { name = "collector", editable = "collector" },
     { name = "crosscut", editable = "crosscut" },
+    { name = "shared", editable = "shared" },
     { name = "strands-agents", specifier = ">=0.1" },
 ]
 
@@ -1513,6 +1515,7 @@ name = "shared"
 version = "0.1.0"
 source = { editable = "shared" }
 dependencies = [
+    { name = "bedrock-agentcore" },
     { name = "boto3" },
     { name = "pydantic" },
     { name = "pyyaml" },
@@ -1520,6 +1523,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "bedrock-agentcore", specifier = ">=1.4" },
     { name = "boto3", specifier = ">=1.34" },
     { name = "pydantic", specifier = ">=2.0" },
     { name = "pyyaml", specifier = ">=6.0" },
