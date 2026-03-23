@@ -18,6 +18,7 @@ import { RuntimeStack } from "../lib/runtime-stack";
 import { MemoryStack } from "../lib/memory-stack";
 import { ObservabilityStack } from "../lib/observability-stack";
 import { EventStack } from "../lib/event-stack";
+import { OrchestrationStack } from "../lib/orchestration-stack";
 
 const app = new cdk.App();
 
@@ -63,3 +64,16 @@ const eventStack = new EventStack(app, "EventStack", {
   dataBucket: storageStack.dataBucket,
 });
 eventStack.addDependency(storageStack);
+
+// Step 8: Step Functions ワークフロー（ハイブリッドオーケストレーション）
+// 天気分析WF: WeatherDataFetched → 都市並列分析 → 横断分析 → レポート
+// 異常気象監視WF: WeatherAnomalyDetected → エージェント分析 → 重要度判定 → 通知/保存
+// 学習ポイント: 外側の Step Functions（決定的制御）が内側の AgentCore（LLM動的判断）を呼ぶ
+// ハイブリッドオーケストレーションパターン（Step 8 対応）
+const orchestrationStack = new OrchestrationStack(app, "OrchestrationStack", {
+  description: "天気データ分析エージェント - Step Functions ワークフロー",
+  dataBucket: storageStack.dataBucket,
+  eventBus: eventStack.eventBus,
+});
+orchestrationStack.addDependency(eventStack);
+orchestrationStack.addDependency(runtimeStack);

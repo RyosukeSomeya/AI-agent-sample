@@ -524,18 +524,24 @@ stateDiagram-v2
 
 #### 異常気象監視ワークフロー
 
+<!-- implement: 2026-03-22 TASK-013 サンプル実装の簡略化を反映、分岐条件を明記 -->
+
 ```mermaid
 stateDiagram-v2
     [*] --> ParseAnomaly: EventBridge トリガー
     ParseAnomaly --> InvokeAlertAgent: 異常検知エージェント呼び出し
-    InvokeAlertAgent --> WaitForCompletion: waitForTaskToken
-    WaitForCompletion --> EvaluateSeverity: 重要度判定
-    EvaluateSeverity --> SendSNS: critical/warning
-    EvaluateSeverity --> LogOnly: info
-    SendSNS --> SaveAlert: S3に保存
+    InvokeAlertAgent --> EvaluateSeverity: 重要度判定
+    EvaluateSeverity --> SendNotification: anomaly_score > 0.7（critical/warning）
+    EvaluateSeverity --> LogOnly: それ以外（info）
+    SendNotification --> SaveAlert: S3に保存
     LogOnly --> SaveAlert
     SaveAlert --> [*]
 ```
+
+> **サンプル実装の簡略化:**
+> - 本番では InvokeAlertAgent と EvaluateSeverity の間に `waitForTaskToken` による非同期待機ステップが入るが、サンプルでは Pass ステートで簡略化している
+> - 本番では SendNotification で SNS/SES 通知を送るが、サンプルでは Pass ステート（TASK-014 で接続予定）
+> - EvaluateSeverity の分岐条件: `anomaly_score > 0.9` → critical、`anomaly_score > 0.7` → warning、それ以外 → info
 
 ---
 

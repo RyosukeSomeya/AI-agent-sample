@@ -1,6 +1,5 @@
 import * as cdk from "aws-cdk-lib";
 import * as events from "aws-cdk-lib/aws-events";
-import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as s3 from "aws-cdk-lib/aws-s3";
@@ -35,10 +34,6 @@ export interface EventStackProps extends cdk.StackProps {
  *     サンプルではログ出力のみ
  */
 export class EventStack extends cdk.Stack {
-  /** EventBridge Rule: WeatherDataFetched（OrchestrationStack でターゲットを追加する） */
-  public readonly weatherDataFetchedRule: events.Rule;
-  /** EventBridge Rule: WeatherAnomalyDetected（OrchestrationStack でターゲットを追加する） */
-  public readonly weatherAnomalyDetectedRule: events.Rule;
   /** EventBridge Bus（カスタムイベントバス） */
   public readonly eventBus: events.EventBus;
 
@@ -209,46 +204,10 @@ export class EventStack extends cdk.Stack {
       state: "ENABLED",
     });
 
-    // --- EventBridge Rule ---
-    // 学習ポイント: Rule はイベントをフィルタリングして後続サービスにルーティングする。
-    // detail-type でイベント種別を指定し、マッチするイベントだけをターゲットに転送する。
-    // ターゲット（Step Functions）は OrchestrationStack（TASK-013）で追加する。
-
-    // Rule: WeatherDataFetched → 天気分析WF
-    // 学習ポイント: eventPattern で source と detailType を指定してフィルタリングする。
-    // 仕様書 4.3 のイベントスキーマに対応。
-    this.weatherDataFetchedRule = new events.Rule(
-      this,
-      "WeatherDataFetchedRule",
-      {
-        ruleName: "weather-agent-data-fetched",
-        description:
-          "WeatherDataFetched イベントを天気分析 WF にルーティング",
-        eventBus: this.eventBus,
-        eventPattern: {
-          source: ["weather-agent.ingest"],
-          detailType: ["WeatherDataFetched"],
-        },
-        // ターゲットは OrchestrationStack で追加する
-      }
-    );
-
-    // Rule: WeatherAnomalyDetected → 異常気象監視WF
-    this.weatherAnomalyDetectedRule = new events.Rule(
-      this,
-      "WeatherAnomalyDetectedRule",
-      {
-        ruleName: "weather-agent-anomaly-detected",
-        description:
-          "WeatherAnomalyDetected イベントを異常気象監視 WF にルーティング",
-        eventBus: this.eventBus,
-        eventPattern: {
-          source: ["weather-agent.scorer"],
-          detailType: ["WeatherAnomalyDetected"],
-        },
-        // ターゲットは OrchestrationStack で追加する
-      }
-    );
+    // EventBridge Rule（イベント → Step Functions のルーティング）は
+    // OrchestrationStack（TASK-013）で定義する。
+    // Rule とターゲットを同一スタックに配置することで
+    // CDK のクロススタック循環参照を避ける。
 
     // --- CloudFormation 出力 ---
     new cdk.CfnOutput(this, "EventBusName", {
