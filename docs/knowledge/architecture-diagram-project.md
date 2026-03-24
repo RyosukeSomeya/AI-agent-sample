@@ -61,11 +61,9 @@ financial-agent/
 │   │   └── signal_scorer/               # シグナルスコアリング（Bedrock API）
 │   │       └── handler.py
 │   │
-│   │   # 下記のmcp-serversは不要な見通し
-│   ├── mcp-servers/                     # MCP サーバー群
-│   │   └── spglobal/                    # S&P Global MCP Server
-│   │       ├── __init__.py
-│   │       └── server.py
+│   ├── skills/                         # codex用のスキル置き場
+│   │   ├── codex用のskill
+│   │   ├── .....
 │   │
 │   └── infra/                           # AWS CDK（TypeScript）
 │       ├── package.json
