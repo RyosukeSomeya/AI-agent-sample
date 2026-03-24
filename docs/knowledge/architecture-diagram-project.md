@@ -100,6 +100,8 @@ AI-agents（仮）/
 
 ## 構成図レイヤーとの対応
 
+**CDKの構成などは怪しいです。**
+
 | 構成図レイヤー | ディレクトリ | CDK Stack |
 |---------------|-------------|-----------|
 | 外部データソース（S&P Global, EDGAR, TDnet, ニュース） | `packages/mcp-servers/`, `packages/agents/shared/clients.py` | — |
