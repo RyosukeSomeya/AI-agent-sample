@@ -8,7 +8,7 @@
 ## ディレクトリ構成
 
 ```
-financial-agent/
+AI-agents（仮）/
 ├── README.md
 ├── CLAUDE.md
 │
