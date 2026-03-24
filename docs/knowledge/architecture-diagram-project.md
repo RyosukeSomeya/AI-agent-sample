@@ -93,6 +93,9 @@ AI-agents（仮）/
     └── integration/                     # 結合テスト
         ├── workflows/                   # Step Functions ワークフロー E2E
         └── agents/                      # エージェント間連携（A2A）
+
+※ プラスでローカル開発用のリソース関係のファイルが追加になるかも
+
 ```
 
 ## 構成図レイヤーとの対応
