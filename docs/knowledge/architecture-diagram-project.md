@@ -13,7 +13,7 @@ AI-agents（仮）/
 ├── CLAUDE.md
 │
 ├── packages/
-│   ├── agents(UC1に該当)/                          # エージェント群（Python / uv）
+│   ├── agents1(UC1に該当)/                # エージェント群（Python / uv）
 │   │   ├── pyproject.toml
 │   │   ├── research/                    # リサーチエージェント
 │   │   │   ├── __init__.py
@@ -51,6 +51,9 @@ AI-agents（仮）/
 │   │   └── scripts/                     # デプロイ補助スクリプト
 │   │       ├── deploy_runtime.py        # AgentCore Runtime 作成/更新（boto3）
 │   │       └── setup_observability.py   # ログ配信設定（初回のみ）
+│   │
+│   ├── agents2(UC2_3に該当)/
+│   │   ├── .... 
 │   │
 │   ├── lambdas/                         # Lambda 関数群（Python）
 │   │   ├── pyproject.toml
