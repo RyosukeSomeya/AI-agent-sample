@@ -13,7 +13,7 @@ financial-agent/
 ├── CLAUDE.md
 │
 ├── packages/
-│   ├── agents/                          # エージェント群（Python / uv）
+│   ├── agents(UC1に該当)/                          # エージェント群（Python / uv）
 │   │   ├── pyproject.toml
 │   │   ├── research/                    # リサーチエージェント
 │   │   │   ├── __init__.py
@@ -61,6 +61,7 @@ financial-agent/
 │   │   └── signal_scorer/               # シグナルスコアリング（Bedrock API）
 │   │       └── handler.py
 │   │
+│   │   # 下記のmcp-serversは不要な見通し
 │   ├── mcp-servers/                     # MCP サーバー群
 │   │   └── spglobal/                    # S&P Global MCP Server
 │   │       ├── __init__.py
@@ -79,14 +80,14 @@ financial-agent/
 │           ├── gateway-stack.ts         # 出力・保護層（Bedrock Guardrails, SNS, SES）
 │           └── monitoring-stack.ts      # 監視（CloudWatch Dashboards, Alarms）
 │
-├── docs/
+├── docs/                                # ClaudeCodeの開発用ドキュメント置き場
 │   ├── requirements/                    # 要件定義書
 │   ├── specs/                           # 仕様書
 │   ├── designs/                         # 設計書
 │   │   └── architecture.drawio          # システム構成図
 │   └── tasks/                           # タスク定義
 │
-└── tests/
+└── tests/                               # この
     ├── unit/                            # 単体テスト
     │   ├── agents/
     │   ├── lambdas/
