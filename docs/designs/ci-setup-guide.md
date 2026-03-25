@@ -2,6 +2,7 @@
 
 ## このドキュメントで学ぶこと
 
+- ゼロからプロジェクトを立ち上げるための前提条件と初期化手順
 - GitHub Actions を導入する前に必要なローカル開発ツールの準備
 - AIエージェント開発におけるテスト戦略（テストピラミッド）
 - 必要最低限のCIワークフロー構成
@@ -10,6 +11,68 @@
 
 - Lab 1〜2 で実装したモデル・ツールのテスト方法
 - Lab 全体を通じた品質管理の仕組み
+
+---
+
+## Step 0: ローカルマシンの準備（前提条件）
+
+まっさらな状態からプロジェクトを始める場合、まずローカルマシンに開発ツールをインストールする。
+
+### 必須ツール
+
+| ツール | 用途 | インストール方法 |
+|-------|------|----------------|
+| **Git** | バージョン管理 | OS標準 or `brew install git` |
+| **Python 3.12+** | エージェント開発 | https://python.org/ or `brew install python` |
+| **uv** | Python パッケージ管理（pip/venv の代替。高速） | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
+| **Node.js (LTS)** | CDK 実行に必要 | https://nodejs.org/ or `brew install node` |
+| **AWS CDK CLI** | インフラのコード化・デプロイ | `npm install -g aws-cdk` |
+
+### あると便利（任意）
+
+| ツール | 用途 |
+|-------|------|
+| **AWS CLI** | AWS認証・リソースの動作確認 |
+| **Docker** | CDK の一部アセットビルドで必要な場合がある |
+| **VS Code** | エディタ（devcontainer 対応） |
+
+### インストール確認コマンド
+
+```bash
+git --version        # 2.x 以上
+python3 --version    # 3.12 以上
+uv --version         # インストール済みか確認
+node --version       # LTS バージョン
+cdk --version        # 2.x 以上
+```
+
+### プロジェクト初期化（空のリポジトリから始める場合）
+
+自分で細かくディレクトリを掘る必要はない。`uv init` や `cdk init` が雛形を自動生成してくれる。手で作るのは親ディレクトリだけ。
+
+```bash
+# 1. リポジトリ作成
+mkdir my-project && cd my-project
+git init
+
+# 2. モノレポの親ディレクトリだけ作る
+mkdir -p packages/agents packages/infra .github/workflows
+
+# 3. Python 側の初期化（uv が pyproject.toml 等を生成）
+cd packages/agents
+uv init --name my-agent
+# → pyproject.toml, .venv/ などが生成される
+
+# 4. CDK 側の初期化（cdk が TypeScript プロジェクトを生成）
+cd ../infra
+npx cdk init app --language typescript
+# → package.json, tsconfig.json, bin/, lib/ などが生成される
+
+# 5. CIワークフローファイルを作成
+touch ../../.github/workflows/ci.yml
+```
+
+**なぜこの手順か：** 各ツールの `init` コマンドは、そのツールが期待する構成（ファイル配置・設定の初期値）を正しく作ってくれる。手動で作ると設定漏れや構成ミスの原因になるため、ツールに任せるのが安全。
 
 ---
 
